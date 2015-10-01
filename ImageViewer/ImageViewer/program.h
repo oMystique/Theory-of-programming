@@ -19,4 +19,4 @@ struct Buttons {
 	Sprite arrowRight;
 }; 
 
-void startProgram(Program &program, Buttons &buttons);
+void StartProgram(Program &program, Buttons &buttons);

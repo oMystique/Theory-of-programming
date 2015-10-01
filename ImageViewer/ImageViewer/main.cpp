@@ -5,6 +5,6 @@
 int main() {
 	Program *mainProgram = new Program();
 	Buttons *initButtons = new Buttons();
-	startProgram(*mainProgram, *initButtons);
+	StartProgram(*mainProgram, *initButtons);
 	return 0;
 }

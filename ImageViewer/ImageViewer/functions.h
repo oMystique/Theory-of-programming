@@ -2,12 +2,12 @@
 
 #include "main.h"
 
-float getFileSize(string &path);
+float GetFileSize(string &path);
 
-bool isImage(string fileName);
+bool IsImage(string fileName);
 
-Files getFileList(string &currentPath);
+Files GetFileList(string &currentPath);
 
-void initializePicture(Vector2u windowSize, Files files, Picture *pic, char diraction);
+void InitializePicture(Vector2u windowSize, Files files, Picture *pic, char diraction);
 
-void resizePicture(Vector2u windowSize, Picture & picture);
+void ResizePicture(Vector2u windowSize, Picture & picture);

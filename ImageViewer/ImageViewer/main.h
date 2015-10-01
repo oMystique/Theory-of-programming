@@ -12,16 +12,14 @@ using namespace sf;
 using namespace std;
 
 
-//TODO nullptr для инициализации переменной.
 struct Files {
-	string *files = new string[0];
-	unsigned int nameSize = 0;
-	unsigned int arrSize = 0;
+	string *files;
+	unsigned int nameSize;
+	unsigned int arrSize;
 	string path;
 };
 
 
-//TODO nullptr для инициализации переменной.
 struct Picture {
 	string title;
 	double left;
@@ -29,7 +27,7 @@ struct Picture {
 	Texture *texture = new Texture();
 	Texture *pTexture = new Texture();
 	Texture *nTexture = new Texture();
-	bool error = true;
-	Sprite *sprite = new Sprite;
-	unsigned int num = 0;
+	bool error;
+	Sprite *sprite = new Sprite();
+	unsigned int num;
 };

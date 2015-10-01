@@ -6,14 +6,14 @@
 #include "functions.h"
 
 
-float getFileSize(string &path, string name) {
+float GetFileSize(string const &path, string name) {
 	fstream fp(path + name, fstream::in);
 	fp.seekp(0, ios::end);
 	streamoff size = fp.tellp();
 	return size / SIZE_STORAGE_UNIT / SIZE_STORAGE_UNIT;
 }
 
-bool isImage(string fileName) {
+bool IsImage(string fileName) {
 
 	if (!strrchr(fileName.c_str(), '.')) {
 		return false;
@@ -23,7 +23,7 @@ bool isImage(string fileName) {
 		"png",
 		"gif",
 		"bmp"};
-	//TODO for C++11
+	//T#O#D#O for C++11
 	for (string &extension: extensionList) {
 		if (fileName.substr(fileName.find_last_of(".") + 1) == extension)
 			return true;
@@ -32,10 +32,11 @@ bool isImage(string fileName) {
 }
 
 
-Files getFileList(string &currentPath) {
+Files GetFileList(string &currentPath) {
 	string path = currentPath + string("*");
 	Files files;
 	files.path = currentPath;
+	files.arrSize = 0;
 	unsigned long i = 0; // unsigned - не отрицательное.
 	WIN32_FIND_DATA fileData;
 	HANDLE hFile = FindFirstFile(path.c_str(), &fileData); //поиск первого файла
@@ -49,7 +50,7 @@ Files getFileList(string &currentPath) {
 		hFile = FindFirstFile(path.c_str(), &fileData);
 		while (FindNextFile(hFile, &fileData)) {
 			if (!(fileData.dwFileAttributes&FILE_ATTRIBUTE_DIRECTORY)) {
-				if (isImage(fileData.cFileName)) {
+				if (IsImage(fileData.cFileName)) {
 					files.files[i] = fileData.cFileName;
 					i++;
 				}
@@ -63,8 +64,7 @@ Files getFileList(string &currentPath) {
 }
 
 
-//TODO Исправить.
-void checkAvailability(Image &image, Picture &pic, Files files) { 
+void CheckAvailability(Image &image, Picture &pic, Files files) { 
 	pic.error = false;
 	if (pic.texture->getSize().x >= MAX_TEXTURE_SIZE || pic.texture->getSize().y >= MAX_TEXTURE_SIZE) {
 		cout << "Image resolution is very big: " << image.getSize().x << "x" << image.getSize().y << "\n";
@@ -74,19 +74,19 @@ void checkAvailability(Image &image, Picture &pic, Files files) {
 		cout << "Can not open file: " << files.files[pic.num] << "\n";
 		pic.error = true;
 	}
-	else if (getFileSize(files.path, pic.title) > MAX_FILE_SIZE) {
+	else if (GetFileSize(files.path, pic.title) > MAX_FILE_SIZE) {
 		cout << "File size is very big";
 		pic.error = true;
 	}
 }
 
-void initializePicture(Vector2u windowSize, Files files, Picture *pic, char diraction) {
+void InitializePicture(Vector2u windowSize, Files files, Picture *pic, char diraction) {
 	if (!pic->error) {
 		delete(pic->sprite);
 	}
 	Image *image = new Image();
 	string path = files.path + files.files[pic->num];
-	checkAvailability(*image, *pic, files);
+	CheckAvailability(*image, *pic, files);
 	delete(pic->texture);
 	pic->texture = new Texture;
 	pic->texture->loadFromImage(*image);
@@ -99,10 +99,10 @@ void initializePicture(Vector2u windowSize, Files files, Picture *pic, char dira
 		pic->sprite->setTexture(*(pic->texture));
 		pic->sprite->setOrigin(pic->texture->getSize().x / DEVIDE_INTO_TWO, pic->texture->getSize().y / DEVIDE_INTO_TWO);
 		pic->title = string(files.files[pic->num]);
-	cout << "Size of " + pic->title << ": " << getFileSize(files.path, pic->title) << " mb. \n";
+	cout << "Size of " + pic->title << ": " << GetFileSize(files.path, pic->title) << " mb. \n";
 }
 
-void resizePicture(Vector2u windowSize, Picture & picture) {
+void ResizePicture(Vector2u windowSize, Picture & picture) {
 	float scale = 1;
 	float oldScale = picture.sprite->getScale().x;
 	if (picture.texture->getSize().x * oldScale <= windowSize.x || picture.texture->getSize().y * oldScale) {
