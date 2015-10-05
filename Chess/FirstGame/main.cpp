@@ -2,7 +2,6 @@
 #include <iostream>
 #include <list>
 #include <Windows.h>
-#include <map>
 
 using namespace sf;
 using namespace std;
@@ -10,7 +9,7 @@ using namespace std;
 ////////////////////////////////////////////////////CLASS OF PLAYER////////////////////////
 class Player { // класс Игрока
 public:
-	float x, y, w, h, dx, dy, speed = 0; //координаты игрока х и у, высота ширина, ускорение (по х и по у), сама скорость
+	float x, y, w, h; //координаты игрока х и у, высота ширина, ускорение (по х и по у), сама скорость
 	String File; //файл с расширением
 	Image image;//сфмл изображение
 	Texture texture;//сфмл текстура
@@ -29,37 +28,34 @@ public:
 		sprite.setTexture(texture);//заливаем спрайт текстурой
 		x = X; y = Y;//координата появления спрайта
 		sprite.setTextureRect(IntRect(0, 0, w, h));  //Задаем спрайту  прямоугольник. IntRect - приведение типов
-	}
+	};
 
 	///////////////////////FUNCTIONS OF CLASS PLAYER//////////////////////////////
 	FloatRect getRect() {
 		return FloatRect(x, y, w, h);
-	}
+	};
 
 
 	void update(float time) //функция "оживления" объекта класса. update - обновление. принимает в себя время SFML , вследствие чего работает бесконечно, давая персонажу движение.
 	{
 		sprite.setPosition(x, y); //выводим спрайт в позицию x y , посередине. бесконечно выводим в этой функции, иначе бы наш спрайт стоял на месте.
-	}
-	void step_Peshka(int tempX, int tempY)
+	};
+
+	bool step_Peshka(int tempX, int tempY)
 	{
-		if (color == "white")
+		if (tempY < y)
 		{
-			if ((abs(tempY - y - 78)) < 78 * 2)
-				y -= 78;
-			else
-				y -= 78 * 2;
+			y -= 78;
 		}
-		if (color == "black")
+		else
 		{
 			if ((abs(tempY - y)) < 78 * 2)
 				y += 78;
-			else
-				y += 78 * 2;
 		}
-	}
+		return true;
+	};
 
-	void step_Tower(int tempX, int tempY)
+	bool step_Tower(int tempX, int tempY)
 	{
 			if (abs(x - tempX) < abs(y - tempY))
 			{
@@ -67,14 +63,26 @@ public:
 				{
 					while (y > tempY)
 					{
-						y -= 78;
+						if ((type == "empty"))
+						{
+							y -= 39;
+							return false;
+						}
+						else
+							y -= 78;
 					}
 				}
 				else
 				{
 					while ((y + 78) < tempY)
 					{
-						y += 78;
+						if (type == "empty")
+						{
+							y += 78;
+							return false;
+						}
+						else
+							y += 78;
 					}
 				}	
 			}
@@ -84,20 +92,33 @@ public:
 				{
 					while (x > tempX)
 					{
-						x -= 78;
+						if (type == "empty")
+						{
+							x -= 39;
+							return false;
+						}
+						else
+							x -= 78;
 					}
 				}
 				else
 				{
 					while ((x + 78) < tempX)
 					{
-						x += 78;
+						if (type == "empty")
+						{
+							x += 39;
+							return false;
+						}
+						else
+							x += 78;
 					}
 				}
 			}
-	}
+		return true;
+	};
 
-	void step_Ladya(int tempX, int tempY)
+	bool step_Ladya(int tempX, int tempY)
 	{
 		if (tempY < y)
 		{
@@ -107,6 +128,11 @@ public:
 				{
 					y -= 78;
 					x -= 78;
+					if (type == "empty")
+					{
+						return false;
+					}
+
 				}
 			}
 			else
@@ -115,6 +141,10 @@ public:
 				{
 					y -= 78;
 					x += 78;
+					if (type == "empty")
+					{
+						return false;
+					}
 				}
 			}
 		}
@@ -126,6 +156,10 @@ public:
 				{
 					y += 78;
 					x += 78;
+					if (type == "empty")
+					{
+						return false;
+					}
 				}
 			}
 			else
@@ -134,12 +168,17 @@ public:
 				{
 					y += 78;
 					x -= 78;
+					if (type == "empty")
+					{
+						return false;
+					}
 				}
 			}
 		}
-	}
+		return true;
+	};
 
-	void step_Horse(int tempX, int tempY)
+	bool step_Horse(int tempX, int tempY)
 	{
 		if (abs(tempX - x) > abs(tempY - y))
 		{
@@ -179,9 +218,10 @@ public:
 				x -= 78;
 			}
 		}
-	}
+		return true;
+	};
 
-	void step_King(int tempX, int tempY)
+	bool step_King(int tempX, int tempY)
 	{
 		if (abs(abs(x + 39 - tempX) - abs(y + 39 - tempY)) > 40)
 		{
@@ -237,6 +277,27 @@ public:
 				}
 			}
 		}
+		return true;;
+	};
+
+	bool step_Ferz(int tempX, int tempY)
+	{
+		if (abs(tempX - x - 39) > 40)
+		{
+			if (abs(tempY - y - 39) > 40)
+			{
+				return step_Ladya(tempX, tempY);
+			}
+			else
+			{
+				return step_Tower(tempX, tempY);
+			}
+		}
+		else
+		{
+			return step_Tower(tempX, tempY);
+		}
+		return true;
 	}
 };
 
@@ -244,24 +305,43 @@ public:
 using namespace sf;
 int main()
 {
+	std::list<Player*> players;
+	std::list<Player*>::iterator it;
+	std::list<Player*>::iterator at;
+	std::list<Player*>::iterator that;
+
+	Font font;//шрифт 
+	font.loadFromFile("CyrilicOld.ttf");//передаем нашему шрифту файл шрифта
+	Text text("", font, 19);//создаем объект текст. закидываем в объект текст строку, шрифт, размер шрифта(в пикселях);//сам объект текст (не строка)
+	text.setColor(Color::Red);//покрасили текст в красный. если убрать эту строку, то по умолчанию он белый
+	text.setStyle(sf::Text::Bold | sf::Text::Underlined);//жирный и подчеркнутый текст. по умолчанию он "худой":)) и не подчеркнутый
+
 	int tempX = 0; //временная коорд Х.Снимаем ее после нажатия прав клав мыши
 	int tempY = 0; //коорд Y
 	float distance = 0;//это расстояние от объекта до тыка курсора
 
 	float CurrentFrame = 0;//хранит текущий кадр
 	Clock clock;
-	RenderWindow window(sf::VideoMode(730, 730), "CHESS! Author: IldarkinAlexey; PS-22."); // создаём окно размером 730x730 (в нашем случае)
+	RenderWindow window(sf::VideoMode(821, 730), "CHESS! Author: IldarkinAlexey; PS-22."); // создаём окно размером 730x730 (в нашем случае)
 	Texture BGtexture;
 	BGtexture.loadFromFile("images/chess.png");
+
+	Texture Paneltexture;
+	Paneltexture.loadFromFile("images/panel.png");
 
 	Sprite BGsprite;
 	BGsprite.setTexture(BGtexture);
 	BGsprite.setTextureRect(IntRect(2, 0, 730, 730)); //задаём координаты нашей фигурки [смотрим их в пэйнте]; (начало по х, по у, размер, размер);
 	BGsprite.setPosition(0, 0); //выводим спрайт в позицию x y 
 
-	std::list<Player*> players;
-	std::list<Player*>::iterator it;
-	std::list<Player*>::iterator at;
+	Sprite Panelsprite;
+	Panelsprite.setTexture(Paneltexture);
+	Panelsprite.setTextureRect(IntRect(2, 0, 100, 730)); //задаём координаты нашей фигурки [смотрим их в пэйнте]; (начало по х, по у, размер, размер);
+	Panelsprite.setPosition(730, 0); //выводим спрайт в позицию x y 
+
+	/*Sprite Board;
+	Board.setTexture(BGtexture);
+	Board.setTextureRect(IntRect(51, 51, 680, 680));*/
 
 	players.push_back(new Player("w_peshka.png", 53.0, 524.0, 78.0, 78.0, "peshka", "white"));
 	players.push_back(new Player("w_peshka.png", 131.0, 524.0, 78.0, 78.0, "peshka", "white"));
@@ -295,12 +375,16 @@ int main()
 	players.push_back(new Player("w_ladya.png", 443.0, 602.0, 78.0, 78.0, "ladya", "white"));
 	players.push_back(new Player("w_king.png", 365.0, 602.0, 78.0, 78.0, "king", "white"));
 	players.push_back(new Player("w_ferz.png", 287.0, 602.0, 78.0, 78.0, "ferz", "white"));
+	players.push_back(new Player("empty_sprite.png", 0.0, 0.0, 60.0, 60.0, "empty", "neutral"));
 
 	bool isMove = false;
 	float dX = 0;//корректировка движения по х
 	float dY = 0;//по у
+	bool game = true;
+	bool gameOVER = true;
+	string moving_color = "white";
 
-	while (window.isOpen())
+	while ((window.isOpen()))
 	{
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
@@ -308,10 +392,12 @@ int main()
 		Vector2i pixelPos = Mouse::getPosition(window);//забираем коорд курсора
 		Vector2f pos = window.mapPixelToCoords(pixelPos);//переводим их в игровые (уходим от коорд окна)
 		sf::Event event;
-		while (window.pollEvent(event))
+		while ((window.pollEvent(event)))
 		{
 			if (event.type == sf::Event::Closed)
 				window.close();
+			if (game)
+			
 			if (event.type == Event::MouseButtonPressed, isMove == false)//если нажата клавиша мыши
 			{
 				if (event.key.code == Mouse::Left)//а именно левая
@@ -320,13 +406,19 @@ int main()
 					{
 						if ((*it)->sprite.getGlobalBounds().contains(pos.x, pos.y)) //и при этом координата курсора попадает в спрайт
 						{
-							((*it)->sprite).setColor(Color::Green);
-							isMove = true;
-							((*it)->isSelect) = true;
+							if ((*it)->color == moving_color)
+							{
+								((*it)->sprite).setColor(Color::Green);
+								isMove = true;
+								((*it)->isSelect) = true;
+							}
 						}
 					}
+					if (!(isMove))
+						break;
 				}
 			}
+
 			if (isMove)//если выбрали объект
 				if (event.type == Event::MouseButtonPressed)//если нажата клавиша мыши
 					if (event.key.code == Mouse::Right) //правая
@@ -352,203 +444,285 @@ int main()
 							{
 								(*it)->isSelect = false;
 								((*it)->sprite).setColor(Color::White);
-								break;
 							}
 						}
 					}
-
-
-
-
-			if (isMove)
+		}
+			for (it = players.begin(); it != players.end(); it++)
 			{
-				for (it = players.begin(); it != players.end(); it++)
+				if ((*it)->isMove)
 				{
-					if ((*it)->isMove)
+					if (isMove)
 					{
-						bool check_death = false;
-						int count = 0;
-						for (at = players.begin(); at != players.end(); at++)
+						string checkReady = "None.";
+						if ((*it)->type == "peshka")
 						{
-							if ((*it) != (*at))
-							{
-								float check_dist = (abs(((tempX - ((*it)->x + 39))*(((*at)->y + 39) - ((*it)->y + 39)) - (tempY - ((*it)->y + 39))*(((*at)->x + 39) - ((*it)->x + 39)))) / (sqrt(pow((tempX - ((*it)->x + 39)), 2) + pow((tempY - ((*it)->y + 39)), 2))));
-								if (check_dist < 39.0)
-								{
-								//	std::cout << check_dist <<" x0"<<" " << (*at)->x <<" y0"<<" "<< (*at)->y << " x1"<<" "<<(*it)->x<<" y1"<<" "<< (*it)->y<< " x2" <<" "<< tempX << " y2" <<" "<< tempY << "\n";
-									if ((abs(tempX - ((*it)->x)) > 39))
-									{
-										if (abs(tempY - ((*it)->y)) > 39)
-										{
-											if (tempX < ((*at)->x))
-											{
-												if (((*at)->x) < ((*it)->x))
-												{
-													if (tempY < (*at)->y)
-													{
-														if (((*at)->y) < ((*it)->y))
-														{
-															count += 1; 
-														}
-													}
-													else
-													{
-														if (((*at)->y) > ((*it)->y))
-														{
-															count += 1;
-														}
-													}
-												}
-											}
-											else
-											{
-												if (((*at)->x) > ((*it)->x))
-												{
-													if (tempY < ((*at)->y))
-													{
-														if (((*at)->y) < ((*it)->y))
-														{
-															count += 1;
-														}
-													}
-													else
-													{
-														if (((*at)->y) > ((*it)->y))
-														{
-															count += 1;
-														}
-													}
-												}
-											}
-										}
-										else
-										{
-											if (tempX < ((*at)->x))
-											{
-												if ((*at)->x < (*it)->x)
-												{
-													count += 1;
-												}
-											}
-											else
-											{
-												if (((*at)->x) > ((*it)->x))
-												{
-													count += 1;
-												}
-											}
-										}
-									}
-									else
-									{
-										if (tempY < ((*at)->y))
-										{
-											if (((*at)->y) < ((*it)->y))
-											{
-												count += 1;
-											}
-										}
-										else
-										{
-											if (((*at)->y) > ((*it)->y))
-											{
-												count += 1;
-											}
-										}
-									}
-								}
-							}
-							if (count == 1)
-							{
-								if (((*it)->color) != ((*at)->color))
-								{
-									check_death = true;
-									isMove = true;
-								}
-								else
-								{
-									isMove = false;
-									((*it)->isMove) = false;
-									break;
-								}
-							}
-							if ((count > 1) && (isMove))
-							{
-								check_death = false;
-								isMove = false;
-								((*it)->isMove) = false;
-								break;
-							}
-						}
-						if (isMove)
-						{
-							if ((*it)->type == "peshka")
-							{
-								(*it)->step_Peshka(tempX, tempY);
-							}
-							if ((*it)->type == "tower")
-							{
-								(*it)->step_Tower(tempX, tempY);
-							}
-							if ((*it)->type == "ladya")
-							{
-								(*it)->step_Ladya(tempX, tempY);
-							}
-							if ((*it)->type == "ferz")
-							{
-								if ((abs(tempX - ((*it)->x) - 39)) > 40)
-								{
-									if (abs(tempY - (*it)->y - 39) > 40)
-									{
-										(*it)->step_Ladya(tempX, tempY);
-									}
-									else
-									{
-										(*it)->step_Tower(tempX, tempY);
-									}
-								}
-								else
-								{
-									(*it)->step_Tower(tempX, tempY);
-								}
-							}
-							if ((*it)->type == "horse")
-							{
-								(*it)->step_Horse(tempX, tempY);
-							}
-							if ((*it)->type == "king")
-							{
-								(*it)->step_King(tempX, tempY);
-							}
-							((*it)->isMove) = false;
-							isMove = false;
-							if (check_death)
+							if (checkReady == "None.")
 							{
 								for (at = players.begin(); at != players.end(); at++)
 								{
-									if (((*it)->x) == ((*at)->x - 78))
+									if ((*at)->type == "empty")
 									{
-										if (((*it)->color) != ((*at)->color))
+										(*at)->x = (*it)->x + 7;
+										(*at)->y = (*it)->y + 7;
+										while (checkReady == "None.")
 										{
-											(*at)->life = false;
-											(*at)->x += 1000;
-											break;
+											(*at)->step_Peshka(tempX, tempY);
+											for (that = players.begin(); that != players.end(); that++)
+											{
+												if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
+												{
+													if (((*at)->step_Peshka(tempX, tempY)) && ((*it)->color != (*that)->color))
+													{
+														checkReady = "Go.";
+														(*that)->life = false;
+														(*that)->sprite.setScale(0, 0);
+														break;
+													}
+													else
+													{
+														checkReady = "Not.";
+														isMove = false;
+														(*it)->isMove = false;
+													}
+													checkReady = "Not.";
+
+												}
+											}
+											if (((*at)->step_Peshka(tempX, tempY)) && (checkReady == "None."))
+											{
+												checkReady = "Go.";
+											}
 										}
 									}
 								}
 							}
+							if (checkReady == "Go.")
+							{
+								(*it)->step_Peshka(tempX, tempY);
+							}
 						}
+						if ((*it)->type == "tower")
+						{
+							if (checkReady == "None.")
+							{
+								for (at = players.begin(); at != players.end(); at++)
+								{
+									if ((*at)->type == "empty")
+									{
+										(*at)->x = (*it)->x + 7;
+										(*at)->y = (*it)->y + 7;
+										while (checkReady == "None.")
+										{
+											std::cout << (*at)->y << " at" << "\n";
+											(*at)->step_Tower(tempX, tempY);
+											for (that = players.begin(); that != players.end(); that++)
+											{
+												std::cout << "*";
+												if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
+												{
+													std::cout << (*that)->y <<" that"<< "\n";
+													//distance = abs(((tempX - (*at)->x)*((*that)->y - (*at)->y) - (tempY - (*at)->y)*((*that)->x - (*at)->x)) / sqrt(pow((tempX - (*at)->x), 2) + pow(((tempY)-(*at)->y), 2)));
+													if (((*at)->step_Tower(tempX, tempY)) && ((*it)->color != (*that)->color))
+													{
+														checkReady = "Go.";
+														(*that)->life = false;
+														(*that)->sprite.setScale(0, 0);
+														break;
+													}
+													else
+													{
+														checkReady = "Not.";
+														isMove = false;
+														(*it)->isMove = false;
+													}
+													checkReady = "Not.";
+
+												}
+											}
+											if (((*at)->step_Tower(tempX, tempY)) && (checkReady == "None."))
+											{
+												checkReady = "Go.";
+											}
+											std::cout << "\n" << "flag=true" << "\n";
+										}
+									}
+								}
+							}
+							if (checkReady == "Go.")
+							{
+								(*it)->step_Tower(tempX, tempY);
+							}
+						}
+						if ((*it)->type == "ladya")
+						{
+							if (checkReady == "None.")
+							{
+								for (at = players.begin(); at != players.end(); at++)
+								{
+									if ((*at)->type == "empty")
+									{
+										(*at)->x = (*it)->x + 7;
+										(*at)->y = (*it)->y + 7;
+										while (checkReady == "None.")
+										{
+											(*at)->step_Ladya(tempX, tempY);
+											for (that = players.begin(); that != players.end(); that++)
+											{
+												if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
+												{
+													if (((*at)->step_Ladya(tempX, tempY)) && ((*it)->color != (*that)->color))
+													{
+														checkReady = "Go.";
+														(*that)->life = false;
+														(*that)->sprite.setScale(0, 0);
+														break;
+													}
+													else
+													{
+														checkReady = "Not.";
+														isMove = false;
+														(*it)->isMove = false;
+													}
+													checkReady = "Not.";
+
+												}
+											}
+											if (((*at)->step_Ladya(tempX, tempY)) && (checkReady == "None."))
+											{
+												checkReady = "Go.";
+											}
+										}
+									}
+								}
+							}
+							if (checkReady == "Go.")
+							{
+								(*it)->step_Ladya(tempX, tempY);
+							}
+						}
+						if ((*it)->type == "ferz")
+						{
+							if (checkReady == "None.")
+							{
+								for (at = players.begin(); at != players.end(); at++)
+								{
+									if ((*at)->type == "empty")
+									{
+										(*at)->x = (*it)->x + 7;
+										(*at)->y = (*it)->y + 7;
+										while (checkReady == "None.")
+										{
+											(*at)->step_Ladya(tempX, tempY);
+											for (that = players.begin(); that != players.end(); that++)
+											{
+												if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
+												{
+													if (((*at)->step_Ferz(tempX, tempY)) && ((*it)->color != (*that)->color))
+													{
+														checkReady = "Go.";
+														(*that)->life = false;
+														(*that)->sprite.setScale(0, 0);
+														break;
+													}
+													else
+													{
+														checkReady = "Not.";
+														isMove = false;
+														(*it)->isMove = false;
+													}
+													checkReady = "Not.";
+
+												}
+											}
+											if (((*at)->step_Ferz(tempX, tempY)) && (checkReady == "None."))
+											{
+												checkReady = "Go.";
+											}
+										}
+									}
+								}
+							}
+							if (checkReady == "Go.")
+							{
+								(*it)->step_Ferz(tempX, tempY);
+							}
+						}
+						if ((*it)->type == "horse")
+						{
+							(*it)->step_Horse(tempX, tempY);
+						}
+						if ((*it)->type == "king")
+						{
+							if (checkReady == "None.")
+							{
+								for (at = players.begin(); at != players.end(); at++)
+								{
+									if ((*at)->type == "empty")
+									{
+										(*at)->x = (*it)->x + 7;
+										(*at)->y = (*it)->y + 7;
+										while (checkReady == "None.")
+										{
+											(*at)->step_King(tempX, tempY);
+											for (that = players.begin(); that != players.end(); that++)
+											{
+												if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
+												{
+													if (((*at)->step_King(tempX, tempY)) && ((*it)->color != (*that)->color))
+													{
+														checkReady = "Go.";
+														(*that)->life = false;
+														(*that)->sprite.setScale(0, 0);
+														break;
+													}
+													else
+													{
+														checkReady = "Not.";
+														isMove = false;
+														(*it)->isMove = false;
+													}
+													checkReady = "Not.";
+
+												}
+											}
+											if (((*at)->step_King(tempX, tempY)) && (checkReady == "None."))
+											{
+												checkReady = "Go.";
+											}
+										}
+									}
+								}
+							}
+							if (checkReady == "Go.")
+							{
+								(*it)->step_King(tempX, tempY);
+							}
+						}
+						((*it)->isMove) = false;
+						isMove = false;
+						if (moving_color == "white")
+						{
+							moving_color = "black";
+						}
+						else
+							moving_color = "white";
 					}
 				}
 			}
-		}
-
+		window.clear();
+		window.draw(BGsprite);
+		window.draw(Panelsprite);
 		for (it = players.begin(); it != players.end();) 
 		{
 			Player*b = *it;
 			b->update(time);
 			if (b->life == false)
 			{
+				if (b->type == "king")
+				{
+					gameOVER = false;
+				}
 				it = players.erase(it);
 				delete(b);
 			}
@@ -558,10 +732,30 @@ int main()
 			}
 		}
 
-		window.clear();
-		window.draw(BGsprite);
 		for (it = players.begin(); it != players.end(); it++) 
 		{
+			if (gameOVER)
+			{
+				if (moving_color == "white")
+				{
+					text.setString("White");//задает строку тексту
+					text.setPosition(748, 649);//задаем позицию текста, центр камеры
+				}
+				else
+				{
+					text.setString("Black");//задает строку тексту
+					text.setPosition(752, 63);//задаем позицию текста, центр камеры
+				}
+			}
+			else
+			{
+				text.setString("G\nA\nM\nE\n\nO\nV\nE\nR\n");//задает строку тексту
+				text.setPosition(765, 295);//задаем позицию текста, центр камеры
+				window.draw(text);
+				window.draw((*it)->sprite);
+				game = false;
+			}
+			window.draw(text);//рисую этот текст
 			window.draw((*it)->sprite);
 		}
 		window.display();
