@@ -24,9 +24,7 @@ const string readyNone = "None.";
 const string readyGo = "Go.";
 const string readyNot = "Not.";
 
-////////////////////////////////////////////////////CLASS OF PLAYER////////////////////////
-class Player  // класс Игрока
-{
+class Player { // класс Игрока
 public:
 	float x, y, w, h; //координаты игрока х и у, высота ширина, ускорение (по х и по у), сама скорость
 	String File; //файл с расширением
@@ -49,39 +47,29 @@ public:
 		sprite.setTextureRect(IntRect(0, 0, w, h));  //Задаем спрайту  прямоугольник. IntRect - приведение типов
 	};
 
-	///////////////////////FUNCTIONS OF CLASS PLAYER//////////////////////////////
-	FloatRect getRect() 
-	{
+	FloatRect getRect() {
 		return FloatRect(x, y, w, h);
 	};
 
 
-	void update(float time) //функция "оживления" объекта класса. update - обновление. принимает в себя время SFML , вследствие чего работает бесконечно, давая персонажу движение.
-	{
+	void update(float time) { //функция "оживления" объекта класса. update - обновление. принимает в себя время SFML , вследствие чего работает бесконечно, давая персонажу движение.
 		sprite.setPosition(x, y); //выводим спрайт в позицию x y , посередине. бесконечно выводим в этой функции, иначе бы наш спрайт стоял на месте.
 	};
 
-	bool step_Peshka(int tempX, int tempY)
-	{
+	bool step_Peshka(int tempX, int tempY) {
 		if ((abs(tempX - (x + half_size_move)) > (half_size_move + 1)))
 			step_Ladya(tempX, tempY);
-		else
-		{
+		else {
 			step_Tower(tempX, tempY);
 		}
 		return true;
 	};
 
-	bool step_Tower(int tempX, int tempY)
-	{
-		if (abs(x - tempX) < abs(y - tempY))
-		{
-			if (tempY < y)
-			{
-				while (y > tempY)
-				{
-					if ((type == type_empty) || (type == type_peshka) || (type == type_king))
-					{
+	bool step_Tower(int tempX, int tempY) {
+		if (abs(x - tempX) < abs(y - tempY)) {
+			if (tempY < y) {
+				while (y > tempY) {
+					if ((type == type_empty) || (type == type_peshka) || (type == type_king)) {
 						y -= size_move;
 						return false;
 					}
@@ -89,12 +77,9 @@ public:
 						y -= size_move;
 				}
 			}
-			else
-			{
-				while ((y + size_move) < tempY)
-				{
-					if ((type == type_empty) || (type == type_peshka) || (type == type_king))
-					{
+			else {
+				while ((y + size_move) < tempY) {
+					if ((type == type_empty) || (type == type_peshka) || (type == type_king)) {
 						y += size_move;
 						return false;
 					}
@@ -103,14 +88,10 @@ public:
 				}
 			}
 		}
-		else
-		{
-			if (tempX < x)
-			{
-				while (x > tempX)
-				{
-					if ((type == type_empty) || (type == type_peshka) || (type == type_king))
-					{
+		else {
+			if (tempX < x) {
+				while (x > tempX) {
+					if ((type == type_empty) || (type == type_peshka) || (type == type_king)) {
 						x -= size_move;
 						return false;
 					}
@@ -118,12 +99,9 @@ public:
 						x -= size_move;
 				}
 			}
-			else
-			{
-				while ((x + size_move) < tempX)
-				{
-					if ((type == type_empty) || (type == type_peshka) || (type == type_king))
-					{
+			else {
+				while ((x + size_move) < tempX) {
+					if ((type == type_empty) || (type == type_peshka) || (type == type_king)) {
 						x += size_move;
 						return false;
 					}
@@ -135,14 +113,10 @@ public:
 		return true;
 	};
 
-	bool step_Ladya(int tempX, int tempY)
-	{
-		if (tempY < y)
-		{
-			if (tempX < x)
-			{
-				while ((x > tempX), (y > tempY))
-				{
+	bool step_Ladya(int tempX, int tempY) {
+		if (tempY < y) {
+			if (tempX < x) {
+				while ((x > tempX), (y > tempY)) {
 					y -= size_move;
 					x -= size_move;
 					if (type == type_empty || type == type_peshka || (type == type_king))
@@ -152,10 +126,8 @@ public:
 
 				}
 			}
-			else
-			{
-				while ((y > tempY), ((x + size_move) < tempX))
-				{
+			else {
+				while ((y > tempY), ((x + size_move) < tempX)) {
 					y -= size_move;
 					x += size_move;
 					if (type == type_empty || type == type_peshka || (type == type_king))
@@ -165,28 +137,21 @@ public:
 				}
 			}
 		}
-		else
-		{
-			if (tempX > x)
-			{
-				while (((y + size_move) < tempY), ((x + size_move) < tempX))
-				{
+		else {
+			if (tempX > x) {
+				while (((y + size_move) < tempY), ((x + size_move) < tempX)) {
 					y += size_move;
 					x += size_move;
-					if (type == type_empty || type == type_peshka || (type == type_king))
-					{
+					if (type == type_empty || type == type_peshka || (type == type_king)) {
 						return false;
 					}
 				}
 			}
-			else
-			{
-				while (((y + size_move) < tempY), (x > tempX))
-				{
+			else {
+				while (((y + size_move) < tempY), (x > tempX)) {
 					y += size_move;
 					x -= size_move;
-					if (type == type_empty || type == type_peshka || (type == type_king))
-					{
+					if (type == type_empty || type == type_peshka || (type == type_king)) {
 						return false;
 					}
 				}
@@ -195,43 +160,32 @@ public:
 		return true;
 	};
 
-	bool step_Horse(int tempX, int tempY)
-	{
-		if (abs(tempX - (x + half_size_move)) > abs(tempY - (y + half_size_move)))
-		{
-			if (tempX > x)
-			{
+	bool step_Horse(int tempX, int tempY) {
+		if (abs(tempX - (x + half_size_move)) > abs(tempY - (y + half_size_move))) {
+			if (tempX > x) {
 				x += size_move * 2;
 			}
-			else
-			{
+			else {
 				x -= size_move * 2;
 			}
-			if (tempY > y)
-			{
+			if (tempY > y) {
 				y += size_move;
 			}
-			else
-			{
+			else {
 				y -= size_move;
 			}
 		}
-		else
-		{
-			if (tempY > y)
-			{
+		else {
+			if (tempY > y) {
 				y += size_move * 2;
 			}
-			else
-			{
+			else {
 				y -= size_move * 2;
 			}
-			if (tempX > x)
-			{
+			if (tempX > x) {
 				x += size_move;
 			}
-			else
-			{
+			else {
 				x -= size_move;
 			}
 		}
@@ -239,21 +193,16 @@ public:
 	};
 
 
-	bool step_Ferz(int tempX, int tempY)
-	{
-		if (abs(tempX - x - half_size_move) > (half_size_move + 1))
-		{
-			if (abs(tempY - y - half_size_move) > (half_size_move + 1))
-			{
+	bool step_Ferz(int tempX, int tempY) {
+		if (abs(tempX - x - half_size_move) > (half_size_move + 1)) {
+			if (abs(tempY - y - half_size_move) > (half_size_move + 1)) {
 				return step_Ladya(tempX, tempY);
 			}
-			else
-			{
+			else {
 				return step_Tower(tempX, tempY);
 			}
 		}
-		else
-		{
+		else {
 			return step_Tower(tempX, tempY);
 		}
 		return true;
@@ -261,8 +210,61 @@ public:
 };
 
 
-int main()
-{
+bool IdentifyType(string element_type, Player *tat, int tempX, int tempY) {
+	if (element_type == type_peshka)
+		return ((tat)->step_Peshka(tempX, tempY));
+	else if (element_type == type_tower)
+		return ((tat)->step_Tower(tempX, tempY));
+	else if (element_type == type_ladya)
+		return ((tat)->step_Ladya(tempX, tempY));
+	else if (element_type == type_horse)
+		return ((tat)->step_Horse(tempX, tempY));
+	else if (element_type == type_ferz)
+		return ((tat)->step_Ferz(tempX, tempY));
+	else if (element_type == type_king)
+		return ((tat)->step_Ferz(tempX, tempY));
+}
+
+string CheckLegalOfMove(list<Player*>players, Player *element, int tempX, int tempY) {
+	std::list<Player*>::iterator at; //для вторичной обработки
+	std::list<Player*>::iterator that;
+	string checkReady = readyNone;
+	bool check;
+	for (at = players.begin(); at != players.end(); at++) {
+		if ((*at)->type == type_empty) {
+			(*at)->x = element->x + 7;
+			(*at)->y = element->y + 7;
+			while (checkReady == readyNone) {
+				IdentifyType(element->type, *at, tempX, tempY);
+				for (that = players.begin(); that != players.end(); that++){
+					if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (element))) {
+						if ((IdentifyType(element->type, *at, tempX, tempY)) && ((element->color) != (*that)->color) && (((element->type == type_peshka) && (abs(tempX - (element->x + half_size_move)) > (half_size_move + 1))) || (element->type != type_peshka))) {
+							checkReady = readyGo;
+							(*that)->life = false;
+							(*that)->sprite.setScale(0, 0);
+							break;
+						}
+						else {
+							checkReady = readyNot;
+							element->isMove = false;
+						}
+						checkReady = readyNot;
+
+					}
+				}
+				if ((checkReady == readyNone) && (element->type == type_peshka) && ((abs(tempX - (element->x + half_size_move)) > half_size_move)))
+					checkReady = readyNot;
+				else if ((IdentifyType(element->type, *at, tempX, tempY)) && (checkReady == readyNone)) {
+					checkReady = readyGo;
+				}
+			}
+		}
+	}
+	return checkReady;
+};
+
+
+int main(){
 	std::list<Player*> players; //создаём список объектов класса;
 	std::list<Player*>::iterator it; //итератор для первичной обратки
 	std::list<Player*>::iterator at; //для вторичной обработки
@@ -313,10 +315,6 @@ int main()
 	restartButton_sprite.setTextureRect(IntRect(0, 0, 32, 32));
 	restartButton_sprite.setPosition(774, 5);
 
-	/*Sprite Board;
-	Board.setTexture(BGtexture);
-	Board.setTextureRect(IntRect(51, 51, 680, 680));*/
-
 	players.push_back(new Player("w_peshka.png", 53.0, 524.0, size_move, size_move, type_peshka, color_white));
 	players.push_back(new Player("w_peshka.png", 131.0, 524.0, size_move, size_move, type_peshka, color_white));
 	players.push_back(new Player("w_peshka.png", 209.0, 524.0, size_move, size_move, type_peshka, color_white));
@@ -355,39 +353,29 @@ int main()
 	bool game = true;
 	bool gameOVER = true;
 	string moving_color = color_white;
-	while ((window.isOpen()))
-	{
+	while ((window.isOpen())) {
 		float time = clock.getElapsedTime().asMicroseconds();
 		clock.restart();
 		time = time / 800;
 		Vector2i pixelPos = Mouse::getPosition(window);//забираем коорд курсора
 		Vector2f pos = window.mapPixelToCoords(pixelPos);//переводим их в игровые (уходим от коорд окна)
 		sf::Event event;
-		while ((window.pollEvent(event)))
-		{
+		while ((window.pollEvent(event))) {
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (game)
-
-				if (event.type == Event::MouseButtonPressed, !(isMove))//если нажата клавиша мыши
-				{
-					if (event.key.code == Mouse::Left)//а именно левая
-					{
-						if (exitButton_sprite.getGlobalBounds().contains(pos.x, pos.y))
-						{
+				if (event.type == Event::MouseButtonPressed, !(isMove)) { //если нажата клавиша мыши 
+					if (event.key.code == Mouse::Left) { //а именно левая
+						if (exitButton_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
 							window.close();
 						}
-						if (restartButton_sprite.getGlobalBounds().contains(pos.x, pos.y))
-						{
+						if (restartButton_sprite.getGlobalBounds().contains(pos.x, pos.y)) {
 							window.close();
 							main();
 						}
-						for (it = players.begin(); it != players.end(); it++)
-						{
-							if ((*it)->sprite.getGlobalBounds().contains(pos.x, pos.y)) //и при этом координата курсора попадает в спрайт
-							{
-								if ((*it)->color == moving_color)
-								{
+						for (it = players.begin(); it != players.end(); it++) {
+							if ((*it)->sprite.getGlobalBounds().contains(pos.x, pos.y)) { //и при этом координата курсора попадает в спрайт
+								if ((*it)->color == moving_color) {
 									((*it)->sprite).setColor(Color::Green);
 									isMove = true;
 									((*it)->isSelect) = true;
@@ -401,12 +389,9 @@ int main()
 
 			if (isMove)//если выбрали объект
 				if (event.type == Event::MouseButtonPressed)//если нажата клавиша мыши
-					if ((event.key.code == Mouse::Right) && ((min_border_board < pos.x) && ((max_border_board + 20) > pos.x)) && ((min_border_board < pos.y) && ((max_border_board + 20) > pos.y))) //правая
-					{
-						for (it = players.begin(); it != players.end(); it++)
-						{
-							if (((*it)->isSelect) == true)
-							{
+					if ((event.key.code == Mouse::Right) && ((min_border_board < pos.x) && ((max_border_board + 20) > pos.x)) && ((min_border_board < pos.y) && ((max_border_board + 20) > pos.y))) {
+						for (it = players.begin(); it != players.end(); it++) {
+							if (((*it)->isSelect) == true) {
 								((*it)->isMove) = true;//то начинаем движение
 								((*it)->isSelect) = false;//объект уже не выбран
 								((*it)->sprite).setColor(Color::White);//возвращаем обычный цвет спрайту
@@ -415,316 +400,72 @@ int main()
 							}
 						}
 					}
-					else
-					{
+					else {
 						isMove = false;
-						for (it = players.begin(); it != players.end(); it++)
-						{
-							if ((*it)->isSelect)
-							{
+						for (it = players.begin(); it != players.end(); it++) {
+							if ((*it)->isSelect) {
 								(*it)->isSelect = false;
 								((*it)->sprite).setColor(Color::White);
 							}
 						}
 					}
 		}
-		for (it = players.begin(); it != players.end(); it++)
-		{
-			if (((*it)->isMove) && (isMove))
-			{
+		for (it = players.begin(); it != players.end(); it++) {
+			if (((*it)->isMove) && (isMove)) {
 				string checkReady = readyNone;
-				if ((*it)->type == type_peshka)
-				{
-					for (at = players.begin(); at != players.end(); at++)
-					{
-						if ((*at)->type == type_empty)
-						{
-							(*at)->x = (*it)->x + 7;
-							(*at)->y = (*it)->y + 7;
-							while (checkReady == readyNone)
-							{
-								(*at)->step_Peshka(tempX, tempY);
-								for (that = players.begin(); that != players.end(); that++)
-								{
-									if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
-									{
-										if (((*at)->step_Peshka(tempX, tempY)) && ((*it)->color != (*that)->color) && ((abs(tempX - ((*it)->x + half_size_move)) > (half_size_move + 1))))
-										{
-											checkReady = readyGo;
-											(*that)->life = false;
-											(*that)->sprite.setScale(0, 0);
-											break;
-										}
-										else
-										{
-											checkReady = readyNot;
-											isMove = false;
-											(*it)->isMove = false;
-										}
-										checkReady = readyNot;
-
-									}
-								}
-								if (((*at)->step_Peshka(tempX, tempY)) && (checkReady == readyNone) && ((abs(tempX - ((*it)->x + half_size_move)) < half_size_move)))
-								{
-									checkReady = readyGo;
-								}
-								else
-									if (checkReady != readyGo)
-										checkReady = readyNot;
-							}
-						}
-					}
-					if (checkReady == readyGo)
-					{
+				if ((*it)->type == type_peshka) {
+					checkReady = CheckLegalOfMove(players, (*it), tempX, tempY);
+					if (checkReady == readyGo) {
 						(*it)->step_Peshka(tempX, tempY);
-						if (((*it)->color == color_white) && ((*it)->y < 60))
-						{
+						if (((*it)->color == color_white) && ((*it)->y < 60)) {
 							(*it)->life = false;
 							players.push_back(new Player("w_ferz.png", (*it)->x, (*it)->y, size_move, size_move, type_ferz, color_white));
 						}
-						if (((*it)->color == color_black) && (((*it)->y + size_move) > 650))
-						{
+						if (((*it)->color == color_black) && (((*it)->y + size_move) > 650)) {
 							(*it)->life = false;
 							players.push_back(new Player("b_ferz.png", (*it)->x, (*it)->y, size_move, size_move, type_ferz, color_black));
 						}
 					}
 				}
-				if ((*it)->type == type_tower)
-				{
-					for (at = players.begin(); at != players.end(); at++)
-					{
-						if ((*at)->type == type_empty)
-						{
-							(*at)->x = (*it)->x + 7;
-							(*at)->y = (*it)->y + 7;
-							while (checkReady == readyNone)
-							{
-								(*at)->step_Tower(tempX, tempY);
-								for (that = players.begin(); that != players.end(); that++)
-								{
-									if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
-									{
-										//distance = abs(((tempX - (*at)->x)*((*that)->y - (*at)->y) - (tempY - (*at)->y)*((*that)->x - (*at)->x)) / sqrt(pow((tempX - (*at)->x), 2) + pow(((tempY)-(*at)->y), 2)));
-										if (((*at)->step_Tower(tempX, tempY)) && ((*it)->color != (*that)->color))
-										{
-											checkReady = readyGo;
-											(*that)->life = false;
-											(*that)->sprite.setScale(0, 0);
-											break;
-										}
-										else
-										{
-											checkReady = readyNot;
-											isMove = false;
-											(*it)->isMove = false;
-										}
-										checkReady = readyNot;
-
-									}
-								}
-								if (((*at)->step_Tower(tempX, tempY)) && (checkReady == readyNone))
-								{
-									checkReady = readyGo;
-								}
-							}
-						}
-					}
-					if (checkReady == readyGo)
-					{
+				if ((*it)->type == type_tower){
+					checkReady = CheckLegalOfMove(players, (*it), tempX, tempY);
+					if (checkReady == readyGo) {
 						(*it)->step_Tower(tempX, tempY);
 					}
 				}
-				if ((*it)->type == type_ladya)
-				{
-					for (at = players.begin(); at != players.end(); at++)
-					{
-						if ((*at)->type == type_empty)
-						{
-							(*at)->x = (*it)->x + 7;
-							(*at)->y = (*it)->y + 7;
-							while (checkReady == readyNone)
-							{
-								(*at)->step_Ladya(tempX, tempY);
-								for (that = players.begin(); that != players.end(); that++)
-								{
-									if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
-									{
-										if (((*at)->step_Ladya(tempX, tempY)) && ((*it)->color != (*that)->color))
-										{
-											checkReady = readyGo;
-											(*that)->life = false;
-											(*that)->sprite.setScale(0, 0);
-											break;
-										}
-										else
-										{
-											checkReady = readyNot;
-											isMove = false;
-											(*it)->isMove = false;
-										}
-										checkReady = readyNot;
-
-									}
-								}
-								if (((*at)->step_Ladya(tempX, tempY)) && (checkReady == readyNone))
-								{
-									checkReady = readyGo;
-								}
-							}
-						}
-					}
-
-					if (checkReady == readyGo)
-					{
+				if ((*it)->type == type_ladya) {
+					checkReady = CheckLegalOfMove(players, (*it), tempX, tempY);
+					if (checkReady == readyGo) {
 						(*it)->step_Ladya(tempX, tempY);
 					}
 				}
-				if ((*it)->type == type_ferz)
-				{
-					for (at = players.begin(); at != players.end(); at++)
-					{
-						if ((*at)->type == type_empty)
-						{
-							(*at)->x = (*it)->x + 7;
-							(*at)->y = (*it)->y + 7;
-							while (checkReady == readyNone)
-							{
-								(*at)->step_Ferz(tempX, tempY);
-								for (that = players.begin(); that != players.end(); that++)
-								{
-									if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
-									{
-										if (((*at)->step_Ferz(tempX, tempY)) && ((*it)->color != (*that)->color))
-										{
-											checkReady = readyGo;
-											(*that)->life = false;
-											(*that)->sprite.setScale(0, 0);
-											break;
-										}
-										else
-										{
-											checkReady = readyNot;
-											isMove = false;
-											(*it)->isMove = false;
-										}
-										checkReady = readyNot;
-
-									}
-								}
-								if (((*at)->step_Ferz(tempX, tempY)) && (checkReady == readyNone))
-								{
-									checkReady = readyGo;
-								}
-							}
-						}
-					}
-
-					if (checkReady == readyGo)
-					{
+				if ((*it)->type == type_ferz) {
+					checkReady = CheckLegalOfMove(players, (*it), tempX, tempY);
+					if (checkReady == readyGo) {
 						(*it)->step_Ferz(tempX, tempY);
 					}
 				}
-				if ((*it)->type == type_horse)
-				{
-					for (at = players.begin(); at != players.end(); at++)
-					{
-						if ((*at)->type == type_empty)
-						{
-							(*at)->x = (*it)->x + 7;
-							(*at)->y = (*it)->y + 7;
-							while (checkReady == readyNone)
-							{
-								(*at)->step_Horse(tempX, tempY);
-								for (that = players.begin(); that != players.end(); that++)
-								{
-									if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
-									{
-										if (((*at)->step_Horse(tempX, tempY)) && ((*it)->color != (*that)->color))
-										{
-											checkReady = readyGo;
-											(*that)->life = false;
-											(*that)->sprite.setScale(0, 0);
-											break;
-										}
-										else
-										{
-											checkReady = readyNot;
-											isMove = false;
-											(*it)->isMove = false;
-										}
-										checkReady = readyNot;
-
-									}
-								}
-								if (((*at)->step_Horse(tempX, tempY)) && (checkReady == readyNone))
-								{
-									checkReady = readyGo;
-								}
-							}
-						}
-					}
-					if (checkReady == readyGo)
-					{
+				if ((*it)->type == type_horse) {
+					checkReady = CheckLegalOfMove(players, (*it), tempX, tempY);
+					if (checkReady == readyGo) {
 						float current_x = (*it)->x;
 						float current_y = (*it)->y;
 						(*it)->step_Horse(tempX, tempY);
-						if (((min_border_board > (*it)->x) || (max_border_board < (*it)->x)) || (((min_border_board + 1) >(*it)->y) || (max_border_board < (*it)->y)))
-						{
+						if (((min_border_board > (*it)->x) || (max_border_board < (*it)->x)) || (((min_border_board + 1) >(*it)->y) || (max_border_board < (*it)->y))) {
 							(*it)->x = current_x;
 							(*it)->y = current_y;
 						}
 					}
 				}
-				if ((*it)->type == type_king)
-				{
-					for (at = players.begin(); at != players.end(); at++)
-					{
-						if ((*at)->type == type_empty)
-						{
-							(*at)->x = (*it)->x + 7;
-							(*at)->y = (*it)->y + 7;
-							while (checkReady == readyNone)
-							{
-								(*at)->step_Ferz(tempX, tempY);
-								for (that = players.begin(); that != players.end(); that++)
-								{
-									if (((*at)->getRect().intersects((*that)->getRect())) && ((*at) != (*that)) && ((*that) != (*it)))
-									{
-										if (((*at)->step_Ferz(tempX, tempY)) && ((*it)->color != (*that)->color))
-										{
-											checkReady = readyGo;
-											(*that)->life = false;
-											(*that)->sprite.setScale(0, 0);
-											break;
-										}
-										else
-										{
-											checkReady = readyNot;
-											isMove = false;
-											(*it)->isMove = false;
-										}
-										checkReady = readyNot;
-
-									}
-								}
-								if (((*at)->step_Ferz(tempX, tempY)) && (checkReady == readyNone))
-								{
-									checkReady = readyGo;
-								}
-							}
-						}
-					}
-
-					if (checkReady == readyGo)
-					{
+				if ((*it)->type == type_king) {
+					checkReady = CheckLegalOfMove(players, (*it), tempX, tempY);
+					if (checkReady == readyGo) {
 						(*it)->step_Peshka(tempX, tempY);
 					}
 				}
 				((*it)->isMove) = false;
 				isMove = false;
-				if (checkReady == readyGo)
-				{
+				if (checkReady == readyGo) {
 					if (moving_color == color_white)
 					{
 						moving_color = color_black;
@@ -737,42 +478,33 @@ int main()
 		window.clear();
 		window.draw(BGsprite);
 		window.draw(Panelsprite);
-		for (it = players.begin(); it != players.end();)
-		{
+		for (it = players.begin(); it != players.end();) {
 			Player*b = *it;
 			b->update(time);
-			if (b->life == false)
-			{
-				if (b->type == type_king)
-				{
+			if (b->life == false) {
+				if (b->type == type_king) {
 					gameOVER = false;
 				}
 				it = players.erase(it);
 				delete(b);
 			}
-			else
-			{
+			else {
 				it++;
 			}
 		}
 
-		for (it = players.begin(); it != players.end(); it++)
-		{
-			if (gameOVER)
-			{
-				if (moving_color == color_white)
-				{
+		for (it = players.begin(); it != players.end(); it++) {
+			if (gameOVER) {
+				if (moving_color == color_white) {
 					text.setString(color_white);//задает строку тексту
 					text.setPosition(748, 649);//задаем позицию текста, центр камеры
 				}
-				else
-				{
+				else {
 					text.setString(color_black);//задает строку тексту
 					text.setPosition(752, 63);//задаем позицию текста, центр камеры
 				}
 			}
-			else
-			{
+			else {
 				text.setString("G\nA\nM\nE\n\nO\nV\nE\nR\n");//задает строку тексту
 				text.setPosition(765, 295);//задаем позицию текста, центр камеры
 				window.draw(text);
@@ -786,6 +518,5 @@ int main()
 		window.draw(restartButton_sprite);
 		window.display();
 	}
-
 	return 0;
 }
