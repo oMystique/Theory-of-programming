@@ -6,7 +6,7 @@
 #include "functions.h"
 
 
-float GetFileSize(string const &path, string name) {
+float GetFileSize(string const &path, string const &name) {
 	fstream fp(path + name, fstream::in);
 	fp.seekp(0, ios::end);
 	streamoff size = fp.tellp();
@@ -23,7 +23,6 @@ bool IsImage(string fileName) {
 		"png",
 		"gif",
 		"bmp"};
-	//T#O#D#O for C++11
 	for (string &extension: extensionList) {
 		if (fileName.substr(fileName.find_last_of(".") + 1) == extension)
 			return true;
@@ -32,7 +31,7 @@ bool IsImage(string fileName) {
 }
 
 
-Files GetFileList(string &currentPath) {
+Files GetFileList(string const &currentPath) {
 	string path = currentPath + string("*");
 	Files files;
 	files.path = currentPath;
@@ -64,7 +63,7 @@ Files GetFileList(string &currentPath) {
 }
 
 
-void CheckAvailability(Image &image, Picture &pic, Files files) { 
+void CheckAvailability(Image &image, Picture &pic, Files &files) { 
 	pic.error = false;
 	if (pic.texture->getSize().x >= MAX_TEXTURE_SIZE || pic.texture->getSize().y >= MAX_TEXTURE_SIZE) {
 		cout << "Image resolution is very big: " << image.getSize().x << "x" << image.getSize().y << "\n";
@@ -75,34 +74,34 @@ void CheckAvailability(Image &image, Picture &pic, Files files) {
 		pic.error = true;
 	}
 	else if (GetFileSize(files.path, pic.title) > MAX_FILE_SIZE) {
-		cout << "File size is very big";
+		cout << "File size is very big.";
 		pic.error = true;
 	}
 }
 
-void InitializePicture(Vector2u windowSize, Files files, Picture *pic, char diraction) {
-	if (!pic->error) {
-		delete(pic->sprite);
+void InitializePicture(Vector2u &windowSize, Files &files, Picture &pic, char direction) {
+	if (!pic.error) {
+		delete(pic.sprite);
 	}
 	Image *image = new Image();
-	string path = files.path + files.files[pic->num];
-	CheckAvailability(*image, *pic, files);
-	delete(pic->texture);
-	pic->texture = new Texture;
-	pic->texture->loadFromImage(*image);
-	if (pic->error){
-		pic->texture->loadFromFile("./images/error.jpg");
+	string path = files.path + files.files[pic.num];
+	CheckAvailability(*image, pic, files);
+	delete(pic.texture);
+	pic.texture = new Texture;
+	pic.texture->loadFromImage(*image);
+	if (pic.error){
+		pic.texture->loadFromFile("./images/error.jpg");
 	}
 		delete(image);
-		pic->sprite = new Sprite();
-		pic->sprite->setPosition(0, 0);
-		pic->sprite->setTexture(*(pic->texture));
-		pic->sprite->setOrigin(pic->texture->getSize().x / DEVIDE_INTO_TWO, pic->texture->getSize().y / DEVIDE_INTO_TWO);
-		pic->title = string(files.files[pic->num]);
-	cout << "Size of " + pic->title << ": " << GetFileSize(files.path, pic->title) << " mb. \n";
+		pic.sprite = new Sprite();
+		pic.sprite->setPosition(0, 0);
+		pic.sprite->setTexture(*(pic.texture));
+		pic.sprite->setOrigin(pic.texture->getSize().x / GET_HALF, pic.texture->getSize().y / GET_HALF);
+		pic.title = string(files.files[pic.num]);
+	cout << "Size of " + pic.title << ": " << GetFileSize(files.path, pic.title) << " mb. \n";
 }
 
-void ResizePicture(Vector2u windowSize, Picture & picture) {
+void ResizePicture(Vector2u &windowSize, Picture &picture) {
 	float scale = 1;
 	float oldScale = picture.sprite->getScale().x;
 	if (picture.texture->getSize().x * oldScale <= windowSize.x || picture.texture->getSize().y * oldScale) {
@@ -117,8 +116,8 @@ void ResizePicture(Vector2u windowSize, Picture & picture) {
 		}
 	}
 	picture.sprite->setScale(Vector2f(scale, scale));
-	picture.left = (windowSize.x) / DEVIDE_INTO_TWO;
-	picture.top = (windowSize.y) / DEVIDE_INTO_TWO;
+	picture.left = (windowSize.x) / GET_HALF;
+	picture.top = (windowSize.y) / GET_HALF;
 	picture.sprite->setPosition(Vector2f(float(picture.left), float(picture.top)));
 	picture.texture->setSmooth(true); //сглаживание
 }

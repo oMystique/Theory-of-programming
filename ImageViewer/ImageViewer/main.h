@@ -1,7 +1,7 @@
 #include "functions.h"
 
 const float SIZE_STORAGE_UNIT = 1024.0;
-const float DEVIDE_INTO_TWO = 2;
+const float GET_HALF = 2;
 const double MAX_FILE_SIZE = 100.0;
 const double MAX_TEXTURE_SIZE = 16000.0;
 const float WIDTH_ARROW_SPRITE = 75;

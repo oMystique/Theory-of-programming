@@ -6,8 +6,8 @@ float GetFileSize(string &path);
 
 bool IsImage(string fileName);
 
-Files GetFileList(string &currentPath);
+Files GetFileList(string const &currentPath);
 
-void InitializePicture(Vector2u windowSize, Files files, Picture *pic, char diraction);
+void InitializePicture(Vector2u &windowSize, Files &files, Picture &pic, char direction);
 
-void ResizePicture(Vector2u windowSize, Picture & picture);
+void ResizePicture(Vector2u &windowSize, Picture &picture);

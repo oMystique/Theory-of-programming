@@ -7,7 +7,7 @@ void InitProgram(Program &program) {
 	program.files = GetFileList(program.path);
 	cout << "Numbers of image on directory: " << program.files.arrSize << "\n";
 	if (program.files.arrSize > 0) {
-		InitializePicture(program.windowSize, program.files, &program.picture, 0);
+		InitializePicture(program.windowSize, program.files, program.picture, 0);
 	}
 }
 
@@ -38,7 +38,7 @@ void ActionProgram(Program &program, Buttons &buttons) {
 				else {
 					program.picture.num++;
 				}
-				InitializePicture(program.windowSize, program.files, &program.picture, 2);
+				InitializePicture(program.windowSize, program.files, program.picture, 2);
 			}
 			if (event.type == Event::Resized) {
 				program.windowSize.x = event.size.width;
@@ -51,7 +51,7 @@ void ActionProgram(Program &program, Buttons &buttons) {
 					program.picture.num = program.files.arrSize;
 				}
 				program.picture.num--;
-				InitializePicture(program.windowSize, program.files, &program.picture, 1);
+				InitializePicture(program.windowSize, program.files, program.picture, 1);
 			}
 		}
 		window.setTitle(program.picture.title);
@@ -59,8 +59,8 @@ void ActionProgram(Program &program, Buttons &buttons) {
 		ResizePicture(program.windowSize, program.picture);
 		window.clear();
 		window.draw(*program.picture.sprite);
-		buttons.arrowRight.setPosition(float(window.getSize().x - WIDTH_ARROW_SPRITE), float(window.getSize().y / DEVIDE_INTO_TWO));
-		buttons.arrowLeft.setPosition(WIDTH_ARROW_SPRITE, float(window.getSize().y / DEVIDE_INTO_TWO));
+		buttons.arrowRight.setPosition(float(window.getSize().x - WIDTH_ARROW_SPRITE), float(window.getSize().y / GET_HALF));
+		buttons.arrowLeft.setPosition(WIDTH_ARROW_SPRITE, float(window.getSize().y / GET_HALF));
 		window.draw(buttons.arrowLeft);
 		window.draw(buttons.arrowRight);
 		window.display();
