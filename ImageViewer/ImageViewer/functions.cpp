@@ -65,7 +65,7 @@ Files GetFileList(string const &currentPath) {
 
 void CheckAvailability(Image &image, Picture &pic, Files &files) { 
 	pic.error = false;
-	if (pic.texture->getSize().x >= MAX_TEXTURE_SIZE || pic.texture->getSize().y >= MAX_TEXTURE_SIZE) {
+	if (image.getSize().x >= MAX_TEXTURE_SIZE || image.getSize().y >= MAX_TEXTURE_SIZE) {
 		cout << "Image resolution is very big: " << image.getSize().x << "x" << image.getSize().y << "\n";
 		pic.error = true;
 	}
@@ -87,7 +87,7 @@ void InitializePicture(Vector2u &windowSize, Files &files, Picture &pic, char di
 	string path = files.path + files.files[pic.num];
 	CheckAvailability(*image, pic, files);
 	delete(pic.texture);
-	pic.texture = new Texture;
+	pic.texture = new Texture();
 	pic.texture->loadFromImage(*image);
 	if (pic.error){
 		pic.texture->loadFromFile("./images/error.jpg");

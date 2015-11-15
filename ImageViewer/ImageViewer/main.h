@@ -24,10 +24,8 @@ struct Picture {
 	string title;
 	double left;
 	double top;
-	Texture *texture = new Texture();
-	Texture *pTexture = new Texture();
-	Texture *nTexture = new Texture();
+	Texture *texture;
 	bool error;
-	Sprite *sprite = new Sprite();
+	Sprite *sprite;
 	unsigned int num;
 };
