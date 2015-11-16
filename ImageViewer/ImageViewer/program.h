@@ -14,9 +14,15 @@ struct Program {
 } typedef Program;
 
 struct Buttons {
-	Texture texture;
+	Texture textureArrow;
 	Sprite arrowLeft;
 	Sprite arrowRight;
+
+	Texture texturePlus;
+	Sprite plusSprite;
+
+	Texture textureMinus;
+	Sprite minusSprite;
 }; 
 
 void StartProgram(Program &program, Buttons &buttons);

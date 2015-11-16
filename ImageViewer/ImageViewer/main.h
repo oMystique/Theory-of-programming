@@ -7,6 +7,7 @@ const double MAX_TEXTURE_SIZE = 16000.0;
 const float WIDTH_ARROW_SPRITE = 75;
 const int DEFAULT_WINDOW_WIDTH = 800;
 const int DEFAULT_WINDOW_HEIGHT = 600;
+const float SIZE_MINUS_PLUS_SPRITE = 48;
 
 using namespace sf;
 using namespace std;

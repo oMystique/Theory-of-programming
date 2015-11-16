@@ -12,10 +12,14 @@ void InitProgram(Program &program) {
 }
 
 void ArrowButtons(Buttons &buttons, Program &program) {
-	buttons.texture.loadFromFile("images/arrow.png");
-	buttons.arrowRight.setTexture(buttons.texture);
-	buttons.arrowLeft.setTexture(buttons.texture);
+	buttons.textureArrow.loadFromFile("images/arrow.png");
+	buttons.arrowRight.setTexture(buttons.textureArrow);
+	buttons.arrowLeft.setTexture(buttons.textureArrow);
 	buttons.arrowLeft.setScale(-1, 1);
+	buttons.texturePlus.loadFromFile("images/plus.png");
+	buttons.plusSprite.setTexture(buttons.texturePlus);
+	buttons.textureMinus.loadFromFile("images/minus.png");
+	buttons.minusSprite.setTexture(buttons.textureMinus);
 }
 
 void ActionProgram(Program &program, Buttons &buttons) {
@@ -61,8 +65,12 @@ void ActionProgram(Program &program, Buttons &buttons) {
 		window.draw(*program.picture.sprite);
 		buttons.arrowRight.setPosition(float(window.getSize().x - WIDTH_ARROW_SPRITE), float(window.getSize().y / GET_HALF));
 		buttons.arrowLeft.setPosition(WIDTH_ARROW_SPRITE, float(window.getSize().y / GET_HALF));
+		buttons.plusSprite.setPosition(float(window.getSize().x) / GET_HALF + SIZE_MINUS_PLUS_SPRITE, float(window.getSize().y) - SIZE_MINUS_PLUS_SPRITE);
+		buttons.minusSprite.setPosition(float(window.getSize().x) / GET_HALF - SIZE_MINUS_PLUS_SPRITE, float(window.getSize().y) - SIZE_MINUS_PLUS_SPRITE);
 		window.draw(buttons.arrowLeft);
 		window.draw(buttons.arrowRight);
+		window.draw(buttons.plusSprite);
+		window.draw(buttons.minusSprite);
 		window.display();
 		program.windowSize = window.getSize();
 	}
