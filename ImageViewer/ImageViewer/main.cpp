@@ -2,6 +2,7 @@
 
 #include "program.h"
 
+
 int main() {
 	Program *mainProgram = new Program();
 	Buttons *initButtons = new Buttons();

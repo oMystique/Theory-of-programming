@@ -13,16 +13,18 @@ float GetFileSize(string const &path, string const &name) {
 	return size / SIZE_STORAGE_UNIT / SIZE_STORAGE_UNIT;
 }
 
+
 bool IsImage(string fileName) {
 
 	if (!strrchr(fileName.c_str(), '.')) {
 		return false;
 	}
-	string extensionList[] = { "jpg",
+	string extensionList[] = { 
+		"jpg",
 		"jpeg",
 		"png",
 		"gif",
-		"bmp"};
+		"bmp" };
 	for (string &extension: extensionList) {
 		if (fileName.substr(fileName.find_last_of(".") + 1) == extension)
 			return true;
@@ -78,6 +80,7 @@ void CheckAvailability(Image &image, Picture &pic, Files &files) {
 		pic.error = true;
 	}
 }
+
 
 void InitializePicture(Vector2u &windowSize, Files &files, Picture &pic, char direction) {
 	pic.zoom = false;

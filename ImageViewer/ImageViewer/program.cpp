@@ -32,7 +32,7 @@ void ResizedEvent(RenderWindow &window ,Event &event, Program &program) {
 }
 
 
-void MoveRightEvent(Program &program) {
+void MovePictureListRightEvent(Program &program) {
 	if (program.picture.num + 1 == program.files.arrSize) {
 		program.picture.num = 0;
 	}
@@ -43,7 +43,7 @@ void MoveRightEvent(Program &program) {
 }
 
 
-void MoveLeftEvent(Program &program) {
+void MovePictureListLeftEvent(Program &program) {
 	if (program.picture.num == 0) {
 		program.picture.num = program.files.arrSize;
 	}
@@ -65,10 +65,10 @@ void GetEvent(Program &program, Buttons &buttons, RenderWindow &window, Event &e
 			program.picture.move = false;
 		}
 		if ((Keyboard::isKeyPressed(Keyboard::Right)) || (((event.type == Event::MouseButtonReleased) && (event.key.code == Mouse::Left)) && (buttons.arrowRight.getGlobalBounds().contains(pos.x, pos.y)))) {
-			MoveRightEvent(program);
+			MovePictureListRightEvent(program);
 		}
 		else if ((Keyboard::isKeyPressed(Keyboard::Left)) || (((event.type == Event::MouseButtonReleased) && (event.key.code == Mouse::Left)) && (buttons.arrowLeft.getGlobalBounds().contains(pos.x, pos.y)))) {
-			MoveLeftEvent(program);
+			MovePictureListLeftEvent(program);
 		}
 		if (((event.key.code == Mouse::Left) && (buttons.minusSprite.getGlobalBounds().contains(pos.x, pos.y))) || (((Keyboard::isKeyPressed(Keyboard::LControl)) || (Keyboard::isKeyPressed(Keyboard::RControl))) && (Keyboard::isKeyPressed(Keyboard::Subtract)))) {
 			ZoomPicture(program.picture, - SIZE_ZOOM);
@@ -111,7 +111,7 @@ void ActionProgram(Program &program, Buttons &buttons) {
 		program.picture.sprite->setTexture((*program.picture.texture));
 		ResizePicture(program.windowSize, program.picture);
 		window.clear();
-		if ((program.picture.move) && (program.picture.zoom)) {//если можем двигать
+		if ((program.picture.move) && (program.picture.zoom)) {
 			program.picture.sprite->move(pos.x - program.picture.sprite->getPosition().x, pos.y - program.picture.sprite->getPosition().y);
 		}
 		DrawObjects(window, program, buttons);
