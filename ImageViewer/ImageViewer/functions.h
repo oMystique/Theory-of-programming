@@ -11,3 +11,5 @@ Files GetFileList(string const &currentPath);
 void InitializePicture(Vector2u &windowSize, Files &files, Picture &pic, char direction);
 
 void ResizePicture(Vector2u &windowSize, Picture &picture);
+
+void ZoomPicture(Picture &pic, double typeZoom);

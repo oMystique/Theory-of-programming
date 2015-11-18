@@ -80,6 +80,7 @@ void CheckAvailability(Image &image, Picture &pic, Files &files) {
 }
 
 void InitializePicture(Vector2u &windowSize, Files &files, Picture &pic, char direction) {
+	pic.zoom = false;
 	if (!pic.error) {
 		delete(pic.sprite);
 	}
@@ -101,6 +102,21 @@ void InitializePicture(Vector2u &windowSize, Files &files, Picture &pic, char di
 	cout << "Size of " + pic.title << ": " << GetFileSize(files.path, pic.title) << " mb. \n";
 }
 
+
+void ZoomPicture(Picture &pic, double typeZoom) {
+	pic.zoom = true;
+	if (typeZoom > 0) {
+		if (pic.scale <= MAX_ZOOM) {
+			pic.scale += typeZoom;
+		}
+	}
+	else {
+		if (pic.scale >= MIN_ZOOM) {
+			pic.scale += typeZoom;
+		}
+	}
+}
+
 void ResizePicture(Vector2u &windowSize, Picture &picture) {
 	float scale = 1;
 	float oldScale = picture.sprite->getScale().x;
@@ -111,11 +127,12 @@ void ResizePicture(Vector2u &windowSize, Picture &picture) {
 		else {
 			scale = float(windowSize.x) / picture.texture->getSize().x;
 		}
-		if (scale > 1) {
-			scale = 1;
-		}
+	}
+	if (picture.zoom) {
+		scale = float(picture.scale);
 	}
 	picture.sprite->setScale(Vector2f(scale, scale));
+	picture.scale = scale;
 	picture.left = (windowSize.x) / GET_HALF;
 	picture.top = (windowSize.y) / GET_HALF;
 	picture.sprite->setPosition(Vector2f(float(picture.left), float(picture.top)));

@@ -27,13 +27,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="functions.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="program.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="program.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
