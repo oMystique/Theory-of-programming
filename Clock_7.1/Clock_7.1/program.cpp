@@ -38,15 +38,17 @@ void DrawObjects(Program &program, ClockElements &clock) {
 	program.window.display();
 }
 
-void CreateObjects(Program &program, ClockElements &clock){
-	program.window.create(VideoMode(WIDTH_WINDOW, HEIGHT_WINDOW), "Now you can check the current time. c:");
+void CreateObjects(Program &program, ClockElements &clock) {
+	ContextSettings settings;
+	settings.antialiasingLevel = 8;
+	program.window.create(VideoMode(WIDTH_WINDOW, HEIGHT_WINDOW), "Now you can check the current time. c:", sf::Style::Default, settings);
 	clock.clockFace.setRadius(RADIUS_CLOCK_FACE);
 	clock.clockFace.setFillColor(Color::White);
 	clock.clockFace.setOutlineThickness(3);
 	clock.clockFace.setOutlineColor(Color::Black);
 	clock.hourHand.setSize(Vector2f(WIDTH_HOUR_HAND, HEIGHT_HOUR_HAND));
 	clock.hourHand.setFillColor(Color::Black);
-	clock.hourHand.setPosition(clock.clockFace.getPosition().x + RADIUS_CLOCK_FACE, clock.clockFace.getPosition().y + RADIUS_CLOCK_FACE + HEIGHT_HOUR_HAND / 2);
+	clock.hourHand.setPosition(clock.clockFace.getPosition().x + RADIUS_CLOCK_FACE, clock.clockFace.getPosition().y + RADIUS_CLOCK_FACE - HEIGHT_HOUR_HAND / 2);
 	clock.minuteHand.setSize(Vector2f(WIDTH_MINUTE_HAND, HEIGHT_MINUTE_HAND));
 	clock.minuteHand.setFillColor(Color::Black);
 	clock.minuteHand.setPosition(clock.clockFace.getPosition().x + RADIUS_CLOCK_FACE, clock.clockFace.getPosition().y + RADIUS_CLOCK_FACE);
@@ -66,8 +68,10 @@ void CreateObjects(Program &program, ClockElements &clock){
 
 void PollEvent(Program &program, Event &event) {
 	while (program.window.pollEvent(event)) {
-		if (event.type == sf::Event::Closed)
+		if (event.type == sf::Event::Closed) {
 			program.window.close();
+		}
+				
 	}
 }
 
