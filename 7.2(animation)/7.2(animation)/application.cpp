@@ -29,16 +29,15 @@ Application::Application() :
 
 void Application::DrawObjects() {
 	window.clear(Color::White);
-	for (animation.rectangles.currentRectangle = animation.rectangles.rectanglesList.begin(); animation.rectangles.currentRectangle != animation.rectangles.rectanglesList.end(); animation.rectangles.currentRectangle++) {
-		window.draw(**animation.rectangles.currentRectangle);
+	for (RectangleShape *currentRect : animation.rectangles.rectanglesList) {
+		window.draw(*currentRect);
 	}
 	window.display();
 }
 
 void Application::ProcessEvents() {
 	Event event;
-	while (window.pollEvent(event))
-	{
+	while (window.pollEvent(event)) {
 		if (event.type == Event::Closed)
 			window.close();
 	}
@@ -50,11 +49,11 @@ void Application::CreateObjects() {
 		animation.rectangles.rectanglesList.push_back(new RectangleShape(DEFAULT_RECTANGLE_SIZE));
 	}
 	int i = 1;
-	for (animation.rectangles.currentRectangle = animation.rectangles.rectanglesList.begin(); animation.rectangles.currentRectangle != animation.rectangles.rectanglesList.end(); animation.rectangles.currentRectangle++) {
-		(*animation.rectangles.currentRectangle)->setPosition(DEFAULT_RECTANGLE_SIZE.x, DEFAULT_RECTANGLE_SIZE.x * i);
+	for (RectangleShape *currentRect : animation.rectangles.rectanglesList) {
+		currentRect->setPosition(DEFAULT_RECTANGLE_SIZE.x, DEFAULT_RECTANGLE_SIZE.x * i);
 		i++;
-		(*animation.rectangles.currentRectangle)->setFillColor(Color::Red);
-		(*animation.rectangles.currentRectangle)->setOrigin((*animation.rectangles.currentRectangle)->getSize().x / GET_HALF, (*animation.rectangles.currentRectangle)->getSize().y / GET_HALF);
+		currentRect->setFillColor(Color::Red);
+		currentRect->setOrigin((currentRect)->getSize().x / GET_HALF, (currentRect)->getSize().y / GET_HALF);
 	}
 }
 
@@ -63,7 +62,7 @@ void Application::Run() {
 		ProcessEvents();
 		DrawObjects();
 	}
-	for (animation.rectangles.currentRectangle = animation.rectangles.rectanglesList.begin(); animation.rectangles.currentRectangle != animation.rectangles.rectanglesList.end(); animation.rectangles.currentRectangle++) {
-		delete (*animation.rectangles.currentRectangle);
+	for (RectangleShape *currentRect : animation.rectangles.rectanglesList) {
+		delete currentRect;
 	}
 }
