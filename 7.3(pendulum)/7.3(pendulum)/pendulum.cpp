@@ -32,7 +32,25 @@ void Pendulum::RotatePendulum(float &time) {
 		pendulumSpeed = PENDULUM_SPEED;
 	}
 	else if (smallGearSpeed < 0) {
-		pendulumSpeed = -(PENDULUM_SPEED - 0.0015f);
+		pendulumSpeed = -PENDULUM_SPEED;
+	}
+	if ((pendulumSprite.getRotation() < PENDULUM_MIN_RESET_SPEED_LEFT.x) && (pendulumSprite.getRotation() > PENDULUM_MIN_RESET_SPEED_LEFT.y) && (pendulumSpeed > 0)) {
+		pendulumSpeed = PENDULUM_MIN_RESET_SPEED;
+	}
+	else if ((pendulumSprite.getRotation() < PENDULUM_MIN_RESET_SPEED_RIGHT.x) && (pendulumSprite.getRotation() > PENDULUM_MIN_RESET_SPEED_RIGHT.y) && (pendulumSpeed < 0)) {
+		pendulumSpeed = -PENDULUM_MIN_RESET_SPEED;
+	}
+	if ((pendulumSprite.getRotation() < PENDULUM_MAX_RESET_SPEED_LEFT.x) && (pendulumSprite.getRotation() > PENDULUM_MAX_RESET_SPEED_LEFT.y) && (pendulumSpeed > 0)) {
+			pendulumSpeed = PENDULUM_MAX_RESET_SPEED;
+	}
+	else if ((pendulumSprite.getRotation() < PENDULUM_MAX_RESET_SPEED_RIGHT.x) && (pendulumSprite.getRotation() > PENDULUM_MAX_RESET_SPEED_RIGHT.y) && (pendulumSpeed < 0)) {
+			pendulumSpeed = -PENDULUM_MAX_RESET_SPEED;
+	}
+	if ((pendulumSprite.getRotation() < PENDULUM_POINTS_ROTATION_STOP_LEFT.x) && (pendulumSprite.getRotation() > PENDULUM_POINTS_ROTATION_STOP_LEFT.y) && (pendulumSpeed > 0)) {
+		pendulumSpeed = 0;
+	}
+	else if ((pendulumSprite.getRotation() < PENDULUM_POINTS_ROTATION_STOP_RIGHT.x) && (pendulumSprite.getRotation() > PENDULUM_POINTS_ROTATION_STOP_RIGHT.y) && (pendulumSpeed < 0)) {
+		pendulumSpeed = 0;
 	}
 	pendulumSprite.rotate(pendulumSpeed * time);
 }
