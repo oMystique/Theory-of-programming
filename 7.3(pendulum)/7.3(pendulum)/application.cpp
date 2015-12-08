@@ -7,9 +7,11 @@ Application::Application() :
 };
 
 void Application::CreateObjects() {
-	pendulum.CreateSmallGearWheel();
+	pendulum.CreateTopSmallGearWheel();
 	pendulum.CreateBigGearWheel();
 	pendulum.CreatePendulum();
+	pendulum.CreateBotSmallGears();
+	pendulum.CreateThreads();
 }
 
 void Application::ProcessEvents() {
@@ -22,14 +24,23 @@ void Application::ProcessEvents() {
 			window.close();
 	}
 	pendulum.RotateBigGear(time);
-	pendulum.RotateSmallGear(time);
+	pendulum.RotateTopSmallGear(time);
 	pendulum.RotatePendulum(time);
+	pendulum.RotateBotSmallGears(time);
 }
 
 void Application::DrawObjects() {
 	window.clear(Color::White);
+	window.draw(pendulum.threadLeft);
+	window.draw(pendulum.threadRight);
+	window.draw(pendulum.coilLeft);
+	window.draw(pendulum.coilRight);
 	window.draw(pendulum.pendulumSprite);
-	window.draw(pendulum.smallGearSprite);
+	window.draw(pendulum.topSmallGearSprite);
+	window.draw(pendulum.leftBotSmallGearSprite);
+	window.draw(pendulum.rightBotSmallGearSprite);
+	window.draw(pendulum.left2BotSmallGearSprite);
+	window.draw(pendulum.right2BotSmallGearSprite);
 	window.draw(pendulum.bigGearSprite);
 	window.display();
 }
