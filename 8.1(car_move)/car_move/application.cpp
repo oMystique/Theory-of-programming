@@ -1,7 +1,7 @@
 #include "application.h"
 
 Application::Application() :
-	window(sf::VideoMode(DEFAULT_WINDOW_SIZE.x, DEFAULT_WINDOW_SIZE.y), "Laba_8.1", Style::Close, settings),
+	window(sf::VideoMode(unsigned int(DEFAULT_WINDOW_SIZE.x), unsigned int(DEFAULT_WINDOW_SIZE.y)), "Laba_8.1", Style::Close, settings),
 	world(),
 	car() {
 	Run();
@@ -16,6 +16,7 @@ void Application::ProcessEvents() {
 		if (event.type == Event::Closed)
 			window.close();
 	}
+	car.MoveCar(time);
 }
 
 void Application::DrawObjects() {

@@ -8,7 +8,6 @@ struct Application {
 
 	void Run();
 	void ProcessEvents();
-	void CreateObjects();
 	void DrawObjects();
 
 	Clock clock;
